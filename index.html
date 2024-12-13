@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Extreme Lighting NeRF</title>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GR3QBE9MVE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GR3QBE9MVE');
+</script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="icon" href="./static/favicon.png" />
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+
+<body>
+
+  <style>
+    @media only screen and (max-width: 850px) {
+      .column.is-three-fifths {
+        width: 85%; /* Adjust the width as per your requirement */
+        margin: auto; /* Center the div */
+      }
+    }
+    .video-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+  </style>
+
+  <section class="hero" >
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-2 publication-title">
+              <small>
+                Generative Multiview Relighting for <br>
+3D Reconstruction under Extreme Illumination Variation</h1>
+              </small>
+              <div>
+                  <div class="is-size-5 ">
+                    <span class="author-block">
+                      <a href="https://hadizayer.github.io/" target="_blank">Hadi Alzayer</a><sup>1,2</sup></span>&nbsp;&nbsp;&nbsp;
+                    <span class="author-block">
+                      <a href="https://henzler.github.io/" target="_blank">Philipp Henzler</a><sup>1</sup>&nbsp;&nbsp;&nbsp;
+                    </span>
+                    <span class="author-block">
+                      <a href="https://jonbarron.info/" target="_blank">Jon Barron</a><sup>1</sup>&nbsp;&nbsp;&nbsp;
+                    </span>
+                    <span class="author-block">
+                      <a href="https://jbhuang0604.github.io/" target="_blank">Jia-Bin Huang</a><sup>2</sup>&nbsp;&nbsp;&nbsp;
+                    </span>
+                    
+                    <span class="author-block">
+                      <a href="https://pratulsrinivasan.github.io/" target="_blank">Pratul P. Srinivasan</a><sup>2</sup></span>&nbsp;&nbsp;&nbsp;
+                    <span class="author-block">
+                      <a href="https://dorverbin.github.io/" target="_blank">Dor Verbin</a><sup>2</sup>
+                    </span>
+                  </div>
+
+                  <div class="is-size-4 publication-authors">
+                    <span class="author-block"><sup>1</sup>Google</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="author-block"><sup>2</sup>University of Maryland</span>
+                  </div>
+              </div>
+    
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+        <div class="container">
+          <div class="content has-text-justified">
+            <br>
+            <center>
+            <label class="label" style="width: 70%; vertical-align: middle; margin: 0; padding: 0; text-align: center;">  <video id="teaser" autoplay muted playsinline loop>
+                  <source src="./static/videos/overview.mov" type="video/mp4">
+                </video> 
+            </label>
+            <p>TLDR; Given a collection of images under extreme illumination variations, we make the lighting consistent and we get a consistent NeRF!</p>
+          </center>
+            <br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+  
+
+    <section class="hero is-small">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-three-fifths">
+        <div class="container">
+          <h2 class="title is-3">Novel view synthesis</h2>
+          <!-- <p>Relighting results </p> <br> -->
+          <h2 class="title is-4">Results on Objaverse</h2>
+          <div class="content has-text-justified">
+            <p>Here we show our results on our Objaverse dataset with rendering trajectories of the reconstructions under the reference illumination. Please see the <a href="static/full_objaverse.html"> full set of results here</a> </p>
+            <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
+              <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Reference image </label>
+                <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                  Input images </label>
+                <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Ours </label>
+                <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                  NeRF-Casting + Appearance Embeddings </label>
+                <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                NeROIC </label>
+
+
+      <label class="label" style="width: 19%; vertical-jpg: middle;margin: 0; padding: 0;">
+        <img src="./static/shiny_relighting/ref_3.png" border="0" class="zoom">
+      </label>
+          
+      </label>
+      <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+          <video id="teaser" autoplay muted playsinline loop>
+          <source src="./static/shiny_relighting/input_3.mp4" type="video/mp4">
+          </video> 
+        </label>
+      <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+          <video id="teaser" autoplay muted playsinline loop>
+          <source src="./static/objaverse_ours/shiny_3.mp4" type="video/mp4">
+          </video> 
+      </label>
+
+      <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+        <div class="video-container">
+        <video width=250 id="teaser" autoplay muted playsinline loop>
+        <source src="./static/objaverse_glo/shiny_3.mp4" type="video/mp4">
+        </video> 
+      </div>
+    </label>
+
+    <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+      <div class="video-container">
+      <video id="teaser" autoplay muted playsinline loop>
+      <source src="./static/neroic_renders_objaverse/shiny_3.mp4" type="video/mp4">
+      </video> 
+    </div>
+  </label>
+
+  <label class="label" style="width: 19%; vertical-jpg: middle;margin: 0; padding: 0;">
+    <img src="./static/shiny_relighting/ref_4.png" border="0" class="zoom">
+  </label>
+      
+  </label>
+  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+      <video id="teaser" autoplay muted playsinline loop>
+      <source src="./static/shiny_relighting/input_4.mp4" type="video/mp4">
+      </video> 
+    </label>
+  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+    <div class="video-container">
+      <video id="teaser" autoplay muted playsinline loop>
+      <source src="./static/objaverse_ours/shiny_4.mp4" type="video/mp4">
+      </video> 
+    </div>
+  </label>
+
+  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+    <div class="video-container">
+    <video id="teaser" autoplay muted playsinline loop>
+    <source src="./static/objaverse_glo/shiny_4.mp4" type="video/mp4">
+    </video> 
+  </div>
+</label>
+
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+  <div class="video-container">
+  <video id="teaser" autoplay muted playsinline loop>
+  <source src="./static/neroic_renders_objaverse/shiny_4.mp4" type="video/mp4">
+  </video> 
+</div>
+</label>
+
+
+<label class="label" style="width: 19%; vertical-jpg: middle;margin: 0; padding: 0;">
+  <img src="./static/shiny_relighting/ref_8.png" border="0" class="zoom">
+</label>
+    
+</label>
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+    <video id="teaser" autoplay muted playsinline loop>
+    <source src="./static/shiny_relighting/input_8.mp4" type="video/mp4">
+    </video> 
+  </label>
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+    <video id="teaser" autoplay muted playsinline loop>
+    <source src="./static/objaverse_ours/shiny_8.mp4" type="video/mp4">
+    </video> 
+</label>
+
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+  <div class="video-container">
+  <video  id="teaser" autoplay muted playsinline loop>
+  <source src="./static/objaverse_glo/shiny_8.mp4" type="video/mp4">
+  </video> 
+</div>
+</label>
+
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+  <div class="video-container">
+  <video id="teaser" autoplay muted playsinline loop>
+  <source src="./static/neroic_renders_objaverse/shiny_8.mp4" type="video/mp4">
+  </video> 
+</div>
+</label>
+
+
+<label class="label" style="width: 19%; vertical-jpg: middle;margin: 0; padding: 0;">
+  <img src="./static/shiny_relighting/ref_12.png" border="0" class="zoom">
+</label>
+    
+</label>
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+    <video id="teaser" autoplay muted playsinline loop>
+    <source src="./static/shiny_relighting/input_12.mp4" type="video/mp4">
+    </video> 
+  </label>
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+    <video id="teaser" autoplay muted playsinline loop>
+    <source src="./static/objaverse_ours/shiny_12.mp4" type="video/mp4">
+    </video> 
+</label>
+
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+  <div class="video-container">
+  <video id="teaser" autoplay muted playsinline loop>
+  <source src="./static/objaverse_glo/shiny_12.mp4" type="video/mp4">
+  </video> 
+</div>
+</label>
+
+
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+  <div class="video-container">
+  <video id="teaser" autoplay muted playsinline loop>
+  <source src="./static/neroic_renders_objaverse/shiny_12.mp4" type="video/mp4">
+  </video> 
+</div>
+</label>
+
+
+<label class="label" style="width: 19%; vertical-jpg: middle;margin: 0; padding: 0;">
+  <img src="./static/standard_relighting/ref_3.png" border="0" class="zoom">
+</label>
+    
+</label>
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+    <video id="teaser" autoplay muted playsinline loop>
+    <source src="./static/standard_relighting/input_3.mp4" type="video/mp4">
+    </video> 
+  </label>
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+    <video id="teaser" autoplay muted playsinline loop>
+    <source src="./static/objaverse_ours/standard_3.mp4" type="video/mp4">
+    </video> 
+</label>
+
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+  <div class="video-container">
+  <video id="teaser" autoplay muted playsinline loop>
+  <source src="./static/objaverse_glo/standard_3.mp4" type="video/mp4">
+  </video> 
+</div>
+</label>
+
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+  <div class="video-container">
+  <video  id="teaser" autoplay muted playsinline loop>
+  <source src="./static/neroic_renders_objaverse/standard_3.mp4" type="video/mp4">
+  </video> 
+</div>
+</label>
+
+<label class="label" style="width: 19%; vertical-jpg: middle;margin: 0; padding: 0;">
+  <img src="./static/standard_relighting/ref_5.png" border="0" class="zoom">
+</label>
+    
+</label>
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+    <video id="teaser" autoplay muted playsinline loop>
+    <source src="./static/standard_relighting/input_5.mp4" type="video/mp4">
+    </video> 
+  </label>
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+    <video id="teaser" autoplay muted playsinline loop>
+    <source src="./static/objaverse_ours/standard_5.mp4" type="video/mp4">
+    </video> 
+</label>
+
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+  <div class="video-container">
+  <video id="teaser" autoplay muted playsinline loop>
+  <source src="./static/objaverse_glo/standard_5.mp4" type="video/mp4">
+  </video> 
+</div>
+</label>
+
+<label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+  <div class="video-container">
+  <video id="teaser" autoplay muted playsinline loop>
+  <source src="./static/neroic_renders_objaverse/standard_5.mp4" type="video/mp4">
+  </video> 
+</div>
+</label>
+
+
+
+
+
+            </div>
+          </div>
+          <h2 class="title is-4">Results on NAVI </h2>
+          <div class="content has-text-justified">
+            <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
+              <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Reference image </label>
+              <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Input frames </label>
+              <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Ours </label>
+              <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                NeRF-Casting + Appearance Embeddings </label>
+                <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                  NeROIC</label>
+
+
+                  <label class="label" style="width: 19%; vertical-jpg: middle;margin: 0; padding: 0;">
+                    <img src="./static/navi_input/reference_keywest.png" border="0" class="zoom">
+                  </label>
+
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                    <video id="teaser" autoplay muted playsinline loop>
+                    <source src="./static/navi_input/keywest_showpiece_s.mp4" type="video/mp4">
+                    </video> 
+                  </label>
+                      
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/navi_ours/keywest_showpiece_s.mp4" type="video/mp4">
+                      </video> 
+                    </label>
+
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/navi_glo/keywest_showpiece_s.mp4" type="video/mp4">
+                      </video> 
+                  </label>
+
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                    <video id="teaser" autoplay muted playsinline loop>
+                    <source src="./static/navi_neroic/keywest_showpiece_s.mp4" type="video/mp4">
+                    </video> 
+                </label>
+
+                  <!-- remote car -->
+
+                  <label class="label" style="width: 19%; vertical-jpg: middle;margin: 0; padding: 0;">
+                    <img src="./static/navi_input/reference_remote_control.png" border="0" class="zoom">
+                  </label>
+
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                    <video id="teaser" autoplay muted playsinline loop>
+                    <source src="./static/navi_input/remote_control_toy_car_s.mp4" type="video/mp4">
+                    </video> 
+                  </label>
+                      
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/navi_ours/remote_control_toy_car_s.mp4" type="video/mp4">
+                      </video> 
+                    </label>
+
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/navi_glo/remote_control_toy_car_s.mp4" type="video/mp4">
+                      </video> 
+                  </label>
+
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                    <video id="teaser" autoplay muted playsinline loop>
+                    <source src="./static/navi_neroic/remote_control_toy_car_s.mp4" type="video/mp4">
+                    </video> 
+                </label>
+
+                  <label class="label" style="width: 19%; vertical-jpg: middle;margin: 0; padding: 0;">
+                    <img src="./static/navi_input/reference_bunny.png" border="0" class="zoom">
+                  </label>
+                  <!-- bunny racer -->                  
+
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                    <video id="teaser" autoplay muted playsinline loop>
+                    <source src="./static/navi_input/bunny_racer.mp4" type="video/mp4">
+                    </video> 
+                  </label>
+
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/navi_ours/bunny_racer.mp4" type="video/mp4">
+                      </video> 
+                    </label>
+
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/navi_glo/bunny_racer.mp4" type="video/mp4">
+                      </video> 
+                  </label>
+
+                    <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/navi_neroic/bunny_racer.mp4" type="video/mp4">
+                      </video> 
+                  </label>
+
+                  <label class="label" style="width: 19%; vertical-jpg: middle;margin: 0; padding: 0;">
+                    <img src="./static/navi_input/reference_duck.png" border="0" class="zoom">
+                  </label>
+
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                    <video id="teaser" autoplay muted playsinline loop>
+                    <source src="./static/navi_input/duck_bath_yellow_s.mp4" type="video/mp4">
+                    </video> 
+                  </label>
+                      
+                  </label>
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/navi_ours/duck_bath_yellow_s.mp4" type="video/mp4">
+                      </video> 
+                    </label>
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/navi_glo/duck_bath_yellow_s.mp4" type="video/mp4">
+                      </video> 
+                  </label>
+
+                  <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;">
+                    <video id="teaser" autoplay muted playsinline loop>
+                    <source src="./static/navi_neroic/duck_bath_yellow_s.mp4" type="video/mp4">
+                    </video> 
+                </label>
+
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <br>
+
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-three-fifths">
+        <div class="container">
+          <h2 class="title is-3">Method Overview</h2>
+          <!-- <p>Relighting results </p> <br> -->
+          <div class="content has-text-justified">
+            <center>
+            <label class="label" style="width: 80%; vertical-jpg: middle;margin: 0; padding: 0;">
+              <img src="./static/overview_website_figure.png" border="0" class="zoom">
+            </label>
+            Given a collection of photos taken with varying illuminations, we select the image with the desired illumination as reference, then we use a multiview diffusion model to relight the images to match the reference. We then use a reflection-aware NeRF to reconstruct the object given the relit images. The shading embeddings allow us to model per-image normal variations, which we explain below.
+
+          </center>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <br>
+
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-three-fifths">
+        <div class="container">
+          <h2 class="title is-3">Relighting results</h2>
+          <!-- <p>Relighting results </p> <br> -->
+          <div class="content has-text-justified">
+            <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
+              <label class="label" style="width: 33%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Reference illumination </label>
+              <label class="label" style="width: 33%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Input frames </label>
+              <label class="label" style="width: 33%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Relighting output </label>
+
+                <br>
+                <label class="label" style="width: 99%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                    <video id="teaser" autoplay muted playsinline loop controls>
+                    <source src="./static/shiny_relighting/concat_0.mp4" type="video/mp4">
+                    </video> 
+                </label>
+
+                <br>
+                <label class="label" style="width: 99%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                    <video id="teaser" autoplay muted playsinline loop controls>
+                    <source src="./static/standard_relighting/concat_1.mp4" type="video/mp4">
+                    </video> 
+                </label>
+
+                <br>
+                <label class="label" style="width: 99%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                    <video id="teaser" autoplay muted playsinline loop controls>
+                    <source src="./static/shiny_relighting/concat_12.mp4" type="video/mp4">
+                    </video> 
+                </label>
+
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <br>
+
+    <section class="hero is-small">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-three-fifths">
+        <div class="container">
+          <h2 class="title is-3"> Shading embeddings vs. appearance embeddings</h2>
+          <p>We show that using prior work's appearance embeddings result in a diffuse object. On the other hand, when using our shading embeddings, we can preserve reflections and highlights </p> <br>
+          <div class="content has-text-justified">
+            <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
+              <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Reference image </label>
+              <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Shading embeddings (ours) </label>
+              <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Standard appearance embeddings </label>
+
+
+                  <label class="label" style="width: 32%; vertical-jpg: middle;margin: 0; padding: 0;">
+                    <img src="./static/shiny_relighting/ref_1.png" border="0" class="zoom">
+                  </label>
+                      
+                  <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;">
+                    <video id="teaser" autoplay muted playsinline loop>
+                    <source src="./static/objaverse_ours/shiny_1.mp4" type="video/mp4">
+                    </video> 
+                </label>
+                <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;">
+                    <video id="teaser" autoplay muted playsinline loop>
+                    <source src="./static/ablations/apperancee_embedding_fish.mp4" type="video/mp4">
+                    </video> 
+                  </label>
+
+
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-three-fifths">
+        <div class="container">
+          <h2 class="title is-3"> Reconstructing different lightings</h2>
+          <p>Since we have an input of varying illuminations, we can choose any image as a reference and reconstruct the object under the reference illumination</p> <br>
+          <div class="content has-text-justified">
+            <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
+              <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Reference image </label>
+              <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Ours </label>
+              <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                NeRF-Casting + Appearance Embeddings </label>
+
+
+                  <label class="label" id="example1_refocusing_w" style="width: 32%; vertical-jpg: middle;margin: 0; padding: 0;">
+                    <img src="./static/bird/bird_ref_2.png" border="0" class="zoom">
+                      
+                  </label>
+                  <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/bird/our_bird/our_bird_2.mp4" type="video/mp4">
+                      </video> 
+                    </label>
+                  <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/bird/glo_bird/baseline_bird_2.mp4" type="video/mp4">
+                      </video> 
+                  </label>
+
+                                    <label class="label" id="example1_refocusing_w" style="width: 32%; vertical-jpg: middle;margin: 0; padding: 0;">
+                    <img src="./static/bird/bird_ref_3.png" border="0" class="zoom">
+                      
+                  </label>
+                  <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/bird/our_bird/our_bird_3.mp4" type="video/mp4">
+                      </video> 
+                    </label>
+                  <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/bird/glo_bird/baseline_bird_3.mp4" type="video/mp4">
+                      </video> 
+                  </label>
+
+                                    <label class="label" id="example1_refocusing_w" style="width: 32%; vertical-jpg: middle;margin: 0; padding: 0;">
+                    <img src="./static/bird/bird_ref_4.png" border="0" class="zoom">
+                      
+                  </label>
+                  <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/bird/our_bird/our_bird_4.mp4" type="video/mp4">
+                      </video> 
+                    </label>
+                  <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;">
+                      <video id="teaser" autoplay muted playsinline loop>
+                      <source src="./static/bird/glo_bird/baseline_bird_4.mp4" type="video/mp4">
+                      </video> 
+                  </label>
+
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-three-fifths">
+        <div class="container">
+          <h2 class="title is-3"> Relighting variance</h2>
+          <p>Compared to recent state of the art generative relighting, our relighting method is much more consistent when comparing different sampling outputs. While the baseline shows significant lighting variations, the variance in our outputs can be seen as illumination rotation, which motivates our shading embeddings.</p> <br>
+          <div class="content has-text-justified">
+            <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
+              <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Our relighting </label>
+              <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                IllumiNeRF relighting </label>
+                <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                  GT </label>
+                <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                  <video id="teaser" autoplay muted playsinline loop>
+                  <source src="./static/videos/our_relighting2.mp4" type="video/mp4">
+                  </video> 
+              </label>
+
+                <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                    <video id="teaser" autoplay muted playsinline loop>
+                    <source src="./static/videos/baseline_relighting2.mp4" type="video/mp4">
+                    </video> 
+                  </label>
+
+                  <label class="label" id="example1_refocusing_w" style="width: 32%; vertical-jpg: middle;margin: 0; padding: 0;">
+                    <img src="./static/videos/apple_GT.png" border="0" class="zoom">
+                      
+                  </label>
+
+
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <br>
+
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+        <div class="container">
+          <h2 class="title is-3">Warping in Relighting</h2>
+          <div class="content has-text-justified">
+            <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
+              <p>Here we visualize the environment maps recovered from the model relighting. Note that while the content is preserved, the inconsistencies appear in the form of a warped environment map. As a result, we can correct for the warping by optimizing shading embeddings that can accomodate such inconsistencies.</p>
+            
+              <label class="label" style="width: 24%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Reference illumination </label>
+              <label class="label" style="width: 24%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                Input images  </label>
+                <label class="label" style="width: 24%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                  Relit images  </label> <label class="label" style="width: 24%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                    Recovered envmaps </label>
+
+                    <label class="label" id="example1_refocusing_w" style="width: 24%; vertical-jpg: middle;margin: 0; padding: 0;">
+                      <img src="./static/shiny_relighting/ref_0.png" border="0" class="zoom">
+                        
+                    </label>
+                  <label class="label" style="width: 24%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                    <video id="teaser" autoplay muted playsinline loop>
+                    <source src="./static/shiny_relighting/input_0.mp4" type="video/mp4">
+                    </video> 
+                </label>
+
+                <label class="label" style="width: 24%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                  <video id="teaser" autoplay muted playsinline loop>
+                  <source src="./static/shiny_relighting/relit_0.mp4" type="video/mp4">
+                  </video> 
+              </label>
+
+                <label class="label" style="width: 24%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
+                    <video id="teaser" autoplay muted playsinline loop>
+                    <source src="./static/videos/envmap_zero_glo_diffusion.mp4" type="video/mp4">
+                    </video> 
+                  </label>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+
+
+
+  <!-- <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3 has-text-centered"><b>Stablization from handheld captures</b></h2>
+    </div>
+    <br>
+    <div class="container is-max-desktop">
+      <div class="content" align="center">
+        <video autoplay muted loop playsinline width="80%">
+          <source src="./static/videos/2DCompare.mp4" type="video/mp4">
+        </video>
+       <video id="teaser" autoplay muted playsinline loop>
+          <source src="./static/videos/2DCompare.mp4" type="video/mp4">
+        </video> -->
+        <!-- <div class="content has-text-centered">
+
+        </div>
+      </div>
+    </div>
+    <br>
+  </div> --> 
+
+
+</body>
+</html>
+
+<style>
+	.collapsible {
+		background-color: #eee;
+		color: #444;
+		cursor: pointer;
+		padding: 18px;
+		width: 100%;
+		border: none;
+		text-align: left;
+		outline: none;
+		font-size: 15px;
+	}
+	.active,
+	.collapsible:hover {
+		background-color: #ccc;
+	}
+	.collapsible:after {
+		content: "\02795"; /* + */
+		font-size: 13px;
+		float: right;
+		margin-left: 5px;
+	}
+	.active:after {
+		content: "\2796"; /* - */
+	}
+	#toc {
+		padding: 0 18px;
+		display: none;
+		background-color: #f1f1f1;
+	}
+</style>
+<div style="position: fixed; top: 20px; left: 20px">
+	<button id="show-toc" type="button" class="collapsible">Table of Contents</button>
+	<ul id="toc"></ul>
+</div>
+<script type="text/javascript">
+	const h2s = document.getElementsByTagName("h2");
+	[...h2s].forEach((elm) => {
+		const item = document.createElement("li");
+		const anchor = document.createElement("a");
+		if (!elm.id) elm.id = elm.innerText;
+		anchor.href = `#${elm.id}`;
+		anchor.innerText = elm.innerText;
+		item.appendChild(anchor);
+		toc.appendChild(item);
+	});
+	document.getElementById("show-toc").addEventListener("click", function () {
+		this.classList.toggle("active");
+		const content = this.nextElementSibling;
+		if (content.style.display === "block") {
+			content.style.display = "none";
+		} else {
+			content.style.display = "block";
+		}
+	});
+</script>
