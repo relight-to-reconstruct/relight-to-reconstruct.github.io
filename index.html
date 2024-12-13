@@ -490,7 +490,10 @@
               <img src="./static/overview_website_figure.png" border="0" class="zoom">
             </label>
             Given a collection of photos taken with varying illuminations, we select the image with the desired illumination as reference, then we use a multiview diffusion model to relight the images to match the reference. We then use a reflection-aware NeRF to reconstruct the object given the relit images. The shading embeddings allow us to model per-image normal variations, which we explain below.
-
+            <label class="label" style="width: 80%; vertical-jpg: middle;margin: 0; padding: 0;">
+              <img src="./static/shading_embedding_overview.png" border="0" class="zoom">
+            </label>
+            In  NeRF, reflections are modeled by feeding-in the view dependent effects into the appearance MLP. However, it is challenging to fit reflections perfectly. NeRF-Casting address this issue by explicitly modeling reflections off surfaces using the normals predicted by a trainable Normal MLP. However, when input images have inconsistencies like in our relit images, the typical solution is to use appearance embeddings, but this results in diffuse objects with static reflections as we show below. To address the issue, we model the inconsistencies we get in our relighting images as normal variations, by feeding-in per-image learnable embeddings (we call them shading embeddings) into the normal predicting MLP.
           </center>
           </div>
         </div>
