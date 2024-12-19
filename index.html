@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Extreme Lighting NeRF</title>
+  <title>Extreme Lighting Reconstruction</title>
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-GR3QBE9MVE"></script>
 <script>
@@ -71,9 +71,9 @@
                     </span>
                     
                     <span class="author-block">
-                      <a href="https://pratulsrinivasan.github.io/" target="_blank">Pratul P. Srinivasan</a><sup>2</sup></span>&nbsp;&nbsp;&nbsp;
+                      <a href="https://pratulsrinivasan.github.io/" target="_blank">Pratul P. Srinivasan</a><sup>1</sup></span>&nbsp;&nbsp;&nbsp;
                     <span class="author-block">
-                      <a href="https://dorverbin.github.io/" target="_blank">Dor Verbin</a><sup>2</sup>
+                      <a href="https://dorverbin.github.io/" target="_blank">Dor Verbin</a><sup>1</sup>
                     </span>
                   </div>
 
@@ -119,7 +119,7 @@
           <!-- <p>Relighting results </p> <br> -->
           <h2 class="title is-4">Results on Objaverse</h2>
           <div class="content has-text-justified">
-            <p>Here we show our results on our Objaverse dataset with rendering trajectories of the reconstructions under the reference illumination. Please see the <a href="static/full_objaverse.html"> full set of results here</a> </p>
+            <p>Here we show our results on our synthetic dataset with rendering trajectories of the reconstructions under the reference illumination. Please see the <a href="static/full_objaverse.html"> full set of results here</a> </p>
             <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
               <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
                 Reference image </label>
@@ -339,6 +339,7 @@
           </div>
           <h2 class="title is-4">Results on NAVI </h2>
           <div class="content has-text-justified">
+            <p>Here we show our results on real scenes from the NAVI dataset.</p>
             <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
               <label class="label" style="width: 19%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
                 Reference image </label>
@@ -489,11 +490,14 @@
             <label class="label" style="width: 80%; vertical-jpg: middle;margin: 0; padding: 0;">
               <img src="./static/overview_website_figure.png" border="0" class="zoom">
             </label>
-            Given a collection of photos taken with varying illuminations, we select the image with the desired illumination as reference, then we use a multiview diffusion model to relight the images to match the reference. We then use a reflection-aware NeRF to reconstruct the object given the relit images. The shading embeddings allow us to model per-image normal variations, which we explain below.
-            <label class="label" style="width: 80%; vertical-jpg: middle;margin: 0; padding: 0;">
+          </center>
+                <p>Given a collection of photos taken with varying illuminations, we select the image with the desired illumination as reference, then we use a multiview diffusion model to relight the images to match the reference. We then use a reflection-aware NeRF to reconstruct the object given the relit images. The shading embeddings allow us to model per-image normal variations, which we explain below.</p>
+          <center>
+            <label class="label" style="width: 100%; vertical-jpg: middle;margin: 0; padding: 0;">
               <img src="./static/shading_embedding_overview.png" border="0" class="zoom">
             </label>
-            In  NeRF, reflections are modeled by feeding-in the view dependent effects into the appearance MLP. However, it is challenging to fit reflections perfectly. NeRF-Casting address this issue by explicitly modeling reflections off surfaces using the normals predicted by a trainable Normal MLP. However, when input images have inconsistencies like in our relit images, the typical solution is to use appearance embeddings, but this results in diffuse objects with static reflections as we show below. To address the issue, we model the inconsistencies we get in our relighting images as normal variations, by feeding-in per-image learnable embeddings (we call them shading embeddings) into the normal predicting MLP.
+          </center>
+              <p> In NeRF, reflections are modeled by feeding-in the view dependent effects into the appearance MLP. However, it is challenging to fit reflections perfectly. NeRF-Casting address this issue by explicitly modeling reflections off surfaces using the normals predicted by a trainable Normal MLP. However, when input images have inconsistencies like in our relit images, the typical solution is to use appearance embeddings, but this results in diffuse objects with static reflections as we show below. To address the issue, we model the inconsistencies we get in our relighting images as normal variations, by feeding-in per-image learnable embeddings (we call them shading embeddings) into the normal predicting MLP. </p>
           </center>
           </div>
         </div>
@@ -557,8 +561,8 @@
         <div class="column is-three-fifths">
         <div class="container">
           <h2 class="title is-3"> Shading embeddings vs. appearance embeddings</h2>
-          <p>We show that using prior work's appearance embeddings result in a diffuse object. On the other hand, when using our shading embeddings, we can preserve reflections and highlights </p> <br>
           <div class="content has-text-justified">
+          <p>We show that using prior work's appearance embeddings result in a diffuse object. On the other hand, when using our shading embeddings, we can preserve reflections and highlights </p> <br>
             <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
               <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
                 Reference image </label>
@@ -598,8 +602,8 @@
         <div class="column is-three-fifths">
         <div class="container">
           <h2 class="title is-3"> Reconstructing different lightings</h2>
-          <p>Since we have an input of varying illuminations, we can choose any image as a reference and reconstruct the object under the reference illumination</p> <br>
           <div class="content has-text-justified">
+          <p>Since we have an input of varying illuminations, we can choose any image as a reference and reconstruct the object under the reference illumination</p> <br>
             <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
               <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
                 Reference image </label>
@@ -669,8 +673,8 @@
         <div class="column is-three-fifths">
         <div class="container">
           <h2 class="title is-3"> Relighting variance</h2>
-          <p>Compared to recent state of the art generative relighting, our relighting method is much more consistent when comparing different sampling outputs. While the baseline shows significant lighting variations, the variance in our outputs can be seen as illumination rotation, which motivates our shading embeddings.</p> <br>
           <div class="content has-text-justified">
+          <p>Compared to recent state of the art generative relighting, our relighting method is much more consistent when comparing different sampling outputs. While the baseline shows significant lighting variations, the variance in our outputs can be seen as illumination rotation, which motivates our shading embeddings.</p> <br>
             <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
               <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
                 Our relighting </label>
@@ -705,6 +709,40 @@
   </section>
 
   <br>
+
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-three-fifths">
+        <div class="container">
+          <h2 class="title is-3"> Acknowledgements</h2>
+          <div class="content has-text-justified">
+          <p>We would like to thank Matthew Burruss and Xiaoming Zhao for their help with the rendering pipeline. We also thank Ben Poole, Alex Trevithick, Stan Szymanowicz, Rundi Wu, David Charatan, Jiapeng Tang, Matthew Levine, Ruiqi Gao, Ricardo Martin-Brualla, and Aleksander Hołyński for fruitful discussions.</p> <br>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <br>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code> 
+    @misc{alzayer2024generativemvr,
+      title={Generative Multiview Relighting for {3D} Reconstruction under Extreme Illumination Variation}, 
+      author={Alzayer, Hadi and Henzler, Philipp and Barron, Jonathan T. and Huang, Jia-Bin and Srinivasan, Pratul P. and Verbin, Dor},
+      year={2024},
+      eprint={2412.X},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2412.X}, 
+    }
+    </code></pre>
+</div>
+</section>
 
   <!-- <section class="hero is-small">
     <div class="hero-body">
