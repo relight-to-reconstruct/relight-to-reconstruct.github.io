@@ -497,7 +497,7 @@
               <img src="./static/shading_embedding_overview.png" border="0" class="zoom">
             </label>
           </center>
-              <p> In NeRF, reflections are modeled by feeding-in the view dependent effects into the appearance MLP. However, it is challenging to fit reflections perfectly. NeRF-Casting address this issue by explicitly modeling reflections off surfaces using the normals predicted by a trainable Normal MLP. However, when input images have inconsistencies like in our relit images, the typical solution is to use appearance embeddings, but this results in diffuse objects with static reflections as we show below. To address the issue, we model the inconsistencies we get in our relighting images as normal variations, by feeding-in per-image learnable embeddings (we call them shading embeddings) into the normal predicting MLP. </p>
+              <p> In NeRF, reflections are modeled by feeding-in the view dependent effects into the appearance MLP. However, it is challenging to fit reflections perfectly. NeRF-Casting address this issue by explicitly modeling reflections off surfaces using the normals predicted by an MLP. When the input images have inconsistencies like in our relit images, the typical solution is to use appearance embeddings, but this results in diffuse objects with incorrectly "static" reflections, as we show below. To address this issue, we model the small remaining inconsistencies in our relit images as variations in the normal vectors, and we handle those by feeding into the normal prediction MLP an additional per-image learnable vector which we call <em>shading embeddings</em>. </p>
           </center>
           </div>
         </div>
@@ -562,7 +562,7 @@
         <div class="container">
           <h2 class="title is-3"> Shading embeddings vs. appearance embeddings</h2>
           <div class="content has-text-justified">
-          <p>We show that using prior work's appearance embeddings result in a diffuse object. On the other hand, when using our shading embeddings, we can preserve reflections and highlights </p> <br>
+          <p>We show that using prior work's appearance embeddings result in diffuse appearance. On the other hand, when using our shading embeddings, we can preserve reflections and specular highlights </p> <br>
             <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
               <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
                 Reference image </label>
@@ -603,7 +603,7 @@
         <div class="container">
           <h2 class="title is-3"> Reconstructing different lightings</h2>
           <div class="content has-text-justified">
-          <p>Since we have an input of varying illuminations, we can choose any image as a reference and reconstruct the object under the reference illumination</p> <br>
+          <p>Since we have an input with varying illumination, we can choose any image as a reference and reconstruct the object under the reference illumination</p> <br>
             <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
               <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
                 Reference image </label>
@@ -674,7 +674,7 @@
         <div class="container">
           <h2 class="title is-3"> Relighting variance</h2>
           <div class="content has-text-justified">
-          <p>Compared to recent state of the art generative relighting, our relighting method is much more consistent when comparing different sampling outputs. While the baseline shows significant lighting variations, the variance in our outputs can be seen as illumination rotation, which motivates our shading embeddings.</p> <br>
+          <p>Compared to recent state of the art generative relighting, our relighting method is much more consistent when comparing different sampling outputs. While the baseline shows significant lighting variations, the variance in our outputs appears as small displacement of the specular highlights, further motivating our shading embeddings.</p> <br>
             <div class="field-body" style="display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; vertical-align: middle;">
               <label class="label" style="width: 32%; vertical-align: middle;margin: 0; padding: 0;  text-align: center;">
                 Our relighting </label>
